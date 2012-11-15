@@ -13,33 +13,16 @@ import static android.provider.ContactsContract.CommonDataKinds.Phone;
 import static android.provider.ContactsContract.CommonDataKinds.StructuredName;
 
 
-/*
-iterate all contacts stored either in phone memory or on the SIM card.
- Read first name, last name, 1 or 2 phone numbers per contact
- + type of phone number (mobile, home, work or other + which is the default phone number to be called).
-  Create a text file from these contacts: one line = one contact.
 
-   One line = tab separated values:
-   first name,
-   last name,
-   first phone number, type of first phone number(one char code, details to be discussed),
-    second phone number (if the contact has a second phone number),type of second phone number (if applicable).
-
-    Send text file to server: HTTP POST request, text file is
-    the body of the POST request.  Server responds with a 6 character code ("access code").
-
-    Display the access code to user on the second screen with a success message.
-
- */
 
 /**
  * Used to get a much amout of data, because query is performs in UI thread
  */
-public class QueryForCursorTask extends AbstractUpdateTask<Cursor, Long> {
+public class QueryForCursorTask2 extends AbstractUpdateTask<Cursor, Long> {
 
 	private ContentResolver contentResolver;
 
-	public QueryForCursorTask(TaskUpdateInterface<Cursor> taskFace) {
+	public QueryForCursorTask2(TaskUpdateInterface<Cursor> taskFace) {
 		super(taskFace);
 		contentResolver = taskFace.getMeContext().getContentResolver();
 	}
@@ -54,13 +37,15 @@ public class QueryForCursorTask extends AbstractUpdateTask<Cursor, Long> {
 				ContactsContract.Contacts.DISPLAY_NAME
 		};
 
-		item = contentResolver.query(uri, projection, null, null, null);
-
+		item = contentResolver.query(uri, null, null, null, null);
+		String lookup = "";
 		if (item.moveToFirst()) {
 
 			do { // iterate all data
 				String displayName = DBDataManager.getString(item, ContactsContract.Contacts.DISPLAY_NAME);
+				lookup = DBDataManager.getString(item, "lookup");
 				Log.d("Contact", "  displayName = " + displayName);
+				Log.d("Contact", "  lookup = " + lookup);
 
 			} while (item.moveToNext());
 		}
@@ -69,7 +54,8 @@ public class QueryForCursorTask extends AbstractUpdateTask<Cursor, Long> {
 		Cursor dataCursor = contentResolver.query(ContactsContract.Data.CONTENT_URI,
 				new String[]{ContactsContract.Data._ID, StructuredName.GIVEN_NAME,
 						StructuredName.FAMILY_NAME, StructuredName.DISPLAY_NAME
-				}, null, new String[]{String.valueOf(contactId)} null, null);
+				}, null, null, null);
+
 		if (dataCursor.moveToFirst()) {
 			String indexGivenName = StructuredName.GIVEN_NAME;
 			String indexFamilyName = StructuredName.FAMILY_NAME;
@@ -83,7 +69,7 @@ public class QueryForCursorTask extends AbstractUpdateTask<Cursor, Long> {
 			} while (dataCursor.moveToNext());
 		}
 
-		Cursor phoneCursor = contentResolver.query(Phone.CONTENT_URI, PHONE_PROJECTION, null, null, null);
+		Cursor phoneCursor = contentResolver.query(Phone.CONTENT_URI, null, null, null, null);
 
 		if (phoneCursor.moveToFirst()) {
 
