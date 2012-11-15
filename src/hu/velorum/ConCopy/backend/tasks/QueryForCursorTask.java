@@ -37,56 +37,50 @@ iterate all contacts stored either in phone memory or on the SIM card.
  */
 public class QueryForCursorTask extends AbstractUpdateTask<Cursor, Long> {
 
-    private ContentResolver contentResolver;
+	private ContentResolver contentResolver;
 
-    public QueryForCursorTask(TaskUpdateInterface<Cursor> taskFace) {
-        super(taskFace);
-        contentResolver = taskFace.getMeContext().getContentResolver();
-    }
+	public QueryForCursorTask(TaskUpdateInterface<Cursor> taskFace) {
+		super(taskFace);
+		contentResolver = taskFace.getMeContext().getContentResolver();
+	}
 
-    @Override
-    protected Integer doTheTask(Long... ids) {
+	@Override
+	protected Integer doTheTask(Long... ids) {
 
 		// Run query
 		Uri uri = ContactsContract.Contacts.CONTENT_URI;
-//		String[] projection = new String[] {
-//				ContactsContract.Contacts._ID,
-//				ContactsContract.Contacts.DISPLAY_NAME,
-//				ContactsContract.Contacts.DISPLAY_NAME_ALTERNATIVE,
-//				ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
-//				ContactsContract.Contacts.DISPLAY_NAME_SOURCE
-//		};
-//		String selection = ContactsContract.Contacts.IN_VISIBLE_GROUP + " = '" +
-//				"0" + "'";
-//		String[] selectionArgs = null;
-		String sortOrder = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
+		String[] projection = new String[] {
+				ContactsContract.Contacts._ID,
+				ContactsContract.Contacts.DISPLAY_NAME
+		};
 
+		item = contentResolver.query(uri, projection, null, null, null);
 
+		if (item.moveToFirst()) {
 
+			do { // iterate all data
+				String displayName = DBDataManager.getString(item, ContactsContract.Contacts.DISPLAY_NAME);
+				Log.d("Contact", "  displayName = " + displayName);
 
-		item = contentResolver.query(uri, null, null, null, sortOrder);
-
-
+			} while (item.moveToNext());
+		}
 
 
 		Cursor dataCursor = contentResolver.query(ContactsContract.Data.CONTENT_URI,
 				new String[]{ContactsContract.Data._ID, StructuredName.GIVEN_NAME,
 						StructuredName.FAMILY_NAME, StructuredName.DISPLAY_NAME
-				},null,/*new String[]{String.valueOf(contactId)}*/ null, null);
+				}, null, new String[]{String.valueOf(contactId)} null, null);
 		if (dataCursor.moveToFirst()) {
 			String indexGivenName = StructuredName.GIVEN_NAME;
 			String indexFamilyName = StructuredName.FAMILY_NAME;
-			String indexDisplayName = StructuredName.DISPLAY_NAME;
 
 			do {
-				String displayName = DBDataManager.getString(dataCursor,  indexDisplayName);
-				Log.d("Data", " displayName = " + displayName);
-				String firstName = DBDataManager.getString(dataCursor,  indexGivenName);
+				String firstName = DBDataManager.getString(dataCursor, indexGivenName);
 				Log.d("Data", " first name = " + firstName);
-				String lastName = DBDataManager.getString(dataCursor,  indexFamilyName);
+				String lastName = DBDataManager.getString(dataCursor, indexFamilyName);
 				Log.d("Data", " lastName = " + lastName);
 
-			}while (dataCursor.moveToNext());
+			} while (dataCursor.moveToNext());
 		}
 
 		Cursor phoneCursor = contentResolver.query(Phone.CONTENT_URI, PHONE_PROJECTION, null, null, null);
@@ -94,53 +88,25 @@ public class QueryForCursorTask extends AbstractUpdateTask<Cursor, Long> {
 		if (phoneCursor.moveToFirst()) {
 
 			do {
-				String mobileNumber = DBDataManager.getString(phoneCursor,  Phone.NUMBER);
+				String mobileNumber = DBDataManager.getString(phoneCursor, Phone.NUMBER);
 				Log.d("TEST", "Phone mobileNumber = " + mobileNumber);
-				String mobileNumberType = DBDataManager.getString(phoneCursor,  Phone.TYPE);
+				String mobileNumberType = DBDataManager.getString(phoneCursor, Phone.TYPE);
 				Log.d("TEST", "Phone mobileNumberType = " + mobileNumberType);
-				String mobileNumberLabel = DBDataManager.getString(phoneCursor,  Phone.LABEL);
+				String mobileNumberLabel = DBDataManager.getString(phoneCursor, Phone.LABEL);
 				Log.d("TEST", "Phone mobileNumberLabel = " + mobileNumberLabel);
 
 
-			}while (phoneCursor.moveToNext());
+			} while (phoneCursor.moveToNext());
 		}
 
-		Cursor rawCursor = contentResolver.query(ContactsContract.RawContacts.CONTENT_URI, null, null, null, null);
 
-		if (rawCursor.moveToFirst()) {
+		result = StaticData.RESULT_OK;
 
-			do {
-				String mobileNumber = DBDataManager.getString(phoneCursor,  Phone.NUMBER);
-				Log.d("TEST", "Phone mobileNumber = " + mobileNumber);
-				String mobileNumberType = DBDataManager.getString(phoneCursor,  Phone.TYPE);
-				Log.d("TEST", "Phone mobileNumberType = " + mobileNumberType);
-				String mobileNumberLabel = DBDataManager.getString(phoneCursor,  Phone.LABEL);
-				Log.d("TEST", "Phone mobileNumberLabel = " + mobileNumberLabel);
+		return result;
+	}
 
 
-			}while (phoneCursor.moveToNext());
-		}
-
-        if (item.moveToFirst()) {
-
-			String indexGivenName = StructuredName.GIVEN_NAME;
-			String indexFamilyName = StructuredName.FAMILY_NAME;
-
-//			do { // iterate all data
-//				String displayName = DBDataManager.getString(item,  ContactsContract.Contacts.DISPLAY_NAME);
-//				Log.d("TEST", "  displayName = " + displayName);
-//
-//			} while (item.moveToNext());
-
-            result = StaticData.RESULT_OK;
-        } else {
-            result = StaticData.VALUE_NOT_EXIST;
-        }
-        return result;
-    }
-
-
-	private static final String[] PHONE_PROJECTION = new String[] {
+	private static final String[] PHONE_PROJECTION = new String[]{
 			Phone._ID,
 			Phone.TYPE,
 			Phone.LABEL,
