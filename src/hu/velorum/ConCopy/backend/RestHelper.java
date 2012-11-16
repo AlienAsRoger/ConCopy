@@ -22,13 +22,7 @@ public class RestHelper {
 	public static final String R_YOUR_MOVE = "Success+1";
 	public static final String R_OPPONENT_MOVE = "Success+0";
 
-//	https://github.com/ChessCom/chess/blob/develop/docs/api_user_manual.txt
-//	public static final String BASE_URL = "http://www.chess-5.com";
-	public static final String BASE_URL = "http://www.chess.com";
-
-
-	/*Google Cloud Messaging API part*/
-	public static final String GCM_BASE_URL = "http://www.chess.com/api/gcm";
+	public static final String BASE_URL = "http://posttestserver.com/post.php";
 
 
 	/* Parameters */
@@ -60,7 +54,7 @@ public class RestHelper {
 	}
 
 	public static String formPostRequest(LoadItem loadItem) {
-		return loadItem.getLoadPath() ;
+		return loadItem.getLoadPath();
 	}
 
 	private static String formUrl(List<NameValuePair> nameValuePairs) {
@@ -69,7 +63,7 @@ public class RestHelper {
 		StringBuilder builder = new StringBuilder();
 		builder.append(Q_);
 		String separator = StaticData.SYMBOL_EMPTY;
-		for (NameValuePair pair: safeList) {
+		for (NameValuePair pair : safeList) {
 			builder.append(separator);
 			separator = AND;
 			builder.append(pair.getName()).append(EQUALS).append(pair.getValue());
@@ -77,7 +71,7 @@ public class RestHelper {
 		return builder.toString();
 	}
 
-	public static String formJsonData(List<NameValuePair> requestParams){
+	public static String formJsonData(List<NameValuePair> requestParams) {
 		StringBuilder data = new StringBuilder();
 		String separator = StaticData.SYMBOL_EMPTY;
 		data.append("{");

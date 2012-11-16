@@ -74,7 +74,7 @@ second phone number (if the contact has a second phone number),type of second ph
 		String requiredPart = StaticData.SYMBOL_EMPTY;
 		if (phoneItemOne != null && !TextUtils.isEmpty(phoneItemOne.getPhone())) {
 			requiredPart = firstName + TAB_SYMBOL + lastName
-				+ TAB_SYMBOL + phoneItemOne.getPhone() + TAB_SYMBOL + phoneItemOne.getType();
+					+ TAB_SYMBOL + phoneItemOne.getPhone() + TAB_SYMBOL + phoneItemOne.getType();
 		}
 		String optionalPart = StaticData.SYMBOL_EMPTY;
 		if (phoneItemTwo != null && !TextUtils.isEmpty(phoneItemTwo.getPhone())) {

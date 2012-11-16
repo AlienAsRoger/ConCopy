@@ -25,7 +25,7 @@ public class DBDataManager {
 	public static String[] arguments3 = new String[3];
 
 
-	public static String concatArguments(String... arguments){
+	public static String concatArguments(String... arguments) {
 		StringBuilder selection = new StringBuilder();
 
 		String separator = StaticData.SYMBOL_EMPTY;

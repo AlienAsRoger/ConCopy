@@ -28,13 +28,13 @@ public abstract class AbstractUpdateTask<T, Input> extends AsyncTask<Input, Void
 	protected void onPreExecute() {
 		super.onPreExecute();
 		blockScreenRotation(true);
-		if(taskFace.getMeContext() != null)
+		if (taskFace.getMeContext() != null)
 			taskFace.showProgress(true);
 	}
 
 	@Override
 	protected Integer doInBackground(Input... params) {
-		if(isCancelled()) {
+		if (isCancelled()) {
 			result = StaticData.EMPTY_DATA;
 			return result;
 		}
@@ -43,14 +43,14 @@ public abstract class AbstractUpdateTask<T, Input> extends AsyncTask<Input, Void
 
 	protected abstract Integer doTheTask(Input... params);
 
-	protected void blockScreenRotation(boolean block){
+	protected void blockScreenRotation(boolean block) {
 		if (taskFace.getMeContext() instanceof Activity) {
 			Activity activity = (Activity) taskFace.getMeContext();
-			if(block){
+			if (block) {
 				// Stop the screen orientation changing during an event
-				if(activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+				if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 					activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-				}else{
+				} else {
 					activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 				}
 			} else {
@@ -71,7 +71,7 @@ public abstract class AbstractUpdateTask<T, Input> extends AsyncTask<Input, Void
 		super.onPostExecute(result);
 		blockScreenRotation(false);
 
-		if(isCancelled() || taskFace.getMeContext() == null) {
+		if (isCancelled() || taskFace.getMeContext() == null) {
 			return;
 		}
 
@@ -86,10 +86,10 @@ public abstract class AbstractUpdateTask<T, Input> extends AsyncTask<Input, Void
 		}
 	}
 
-	public AbstractUpdateTask<T, Input> executeTask(Input... input){
-		if(Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB){
+	public AbstractUpdateTask<T, Input> executeTask(Input... input) {
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
 			executeOnExecutor(THREAD_POOL_EXECUTOR, input);
-		}else
+		} else
 			execute(input);
 		return this;
 	}

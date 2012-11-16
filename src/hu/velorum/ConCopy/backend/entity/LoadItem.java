@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class LoadItem {
 
-    private String loadPath;
+	private String loadPath;
 	private List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 	private String postEntity;
 
@@ -43,7 +43,7 @@ public class LoadItem {
 		ArrayList<NameValuePair> removedItems = new ArrayList<NameValuePair>();
 
 		for (NameValuePair nameValuePair : nameValuePairs) {
-			if(nameValuePair.getName().equals(key))
+			if (nameValuePair.getName().equals(key))
 				removedItems.add(nameValuePair);
 
 		}
@@ -52,13 +52,14 @@ public class LoadItem {
 		nameValuePairs.add(pairNew);
 	}
 
-	public List<NameValuePair> getRequestParams(){
+	public List<NameValuePair> getRequestParams() {
 		return nameValuePairs;
 	}
 
 	public void setLoadPath(String loadPath) {
 		this.loadPath = loadPath;
 	}
+
 	public String getLoadPath() {
 		return loadPath;
 	}

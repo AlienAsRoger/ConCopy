@@ -10,12 +10,11 @@ import hu.velorum.ConCopy.backend.entity.QueryParams;
 import hu.velorum.ConCopy.backend.statics.DBDataManager;
 import hu.velorum.ConCopy.backend.statics.StaticData;
 import hu.velorum.ConCopy.ui.ContactItemGetFace;
+import hu.velorum.ConCopy.ui.UploadFace;
 
 import java.util.List;
 
-import static android.provider.ContactsContract.CommonDataKinds.Email;
-import static android.provider.ContactsContract.CommonDataKinds.Phone;
-import static android.provider.ContactsContract.CommonDataKinds.StructuredName;
+import static android.provider.ContactsContract.CommonDataKinds.*;
 
 
 /*
@@ -61,7 +60,13 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 
 	@Override
 	protected int doAdditionToCursor(Cursor cursor) {
+		int totalCnt = cursor.getCount();
+		float num = 0;
+
 		while (cursor.moveToNext()) {
+
+			int progress = (int) ((num++ / (float) totalCnt) * 100);
+
 			String id = cursor.getString(cursor.getColumnIndex(BaseColumns._ID));
 			String contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 
@@ -80,7 +85,7 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 			String phoneType = null;
 //			String phoneLabel = null;
 			int phoneCnt = 0;
-			if (phoneCursor.moveToFirst()){
+			if (phoneCursor.moveToFirst()) {
 				do {
 					phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(Phone.NUMBER));
 					phoneType = phoneCursor.getString(phoneCursor.getColumnIndex(Phone.TYPE));
@@ -102,7 +107,7 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 					if (++phoneCnt == 2) {   // we need only 2 phones
 						break;
 					}
-				}while (phoneCursor.moveToNext());
+				} while (phoneCursor.moveToNext());
 			}
 
 
@@ -137,6 +142,8 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 
 			contacts.add(contactItem);
 
+
+			((UploadFace) taskFace).onProgressUpdated(progress, totalCnt);
 		}
 		if (contacts.size() > 0) {
 			result = StaticData.RESULT_OK;
@@ -151,12 +158,12 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 	@Override
 	protected void onPostExecute(Integer result) {
 		taskFace.showProgress(false);
-		if(isCancelled())
+		if (isCancelled())
 			return;
 
 		if (result == StaticData.RESULT_OK) {
 			contactsUpdateFace.updateContacts(contacts);
-		}else {
+		} else {
 			taskFace.errorHandle(result);
 		}
 	}

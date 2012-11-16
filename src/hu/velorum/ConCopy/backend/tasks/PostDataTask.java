@@ -22,7 +22,7 @@ import java.io.UnsupportedEncodingException;
 
 public class PostDataTask extends AbstractUpdateTask<String, LoadItem> {
 
-    private static final String TAG = "PostDataTask";
+	private static final String TAG = "PostDataTask";
 
 	public PostDataTask(TaskUpdateInterface<String> taskFace) {
 		super(taskFace);
@@ -32,7 +32,7 @@ public class PostDataTask extends AbstractUpdateTask<String, LoadItem> {
 	protected Integer doTheTask(LoadItem... loadItem) {
 
 		String url = RestHelper.formPostRequest(loadItem[0]);
-        result = postData(url, loadItem[0]);
+		result = postData(url, loadItem[0]);
 		return result;
 	}
 
@@ -52,7 +52,7 @@ public class PostDataTask extends AbstractUpdateTask<String, LoadItem> {
 			final String length = String.valueOf(utf8Bytes.length);
 
 			httpPost.addHeader("Content-Type", "text/plain; charset=utf-8");
-			httpPost.addHeader("Content-Length", length);  // in bytes
+//			httpPost.addHeader("Content-Length", length);  // in bytes
 
 			httpPost.setEntity(new StringEntity(loadItem.getPostEntity(), HTTP.UTF_8));
 		} catch (UnsupportedEncodingException e) {
@@ -66,10 +66,10 @@ public class PostDataTask extends AbstractUpdateTask<String, LoadItem> {
 				Log.e(TAG, "Error " + statusCode + " while retrieving data from " + url);
 				return StaticData.UNKNOWN_ERROR;
 			}
-			if (response != null){
+			if (response != null) {
 				item = EntityUtils.toString(response.getEntity());
 				result = StaticData.RESULT_OK;
-				Log.d(TAG,"WebRequest SERVER RESPONSE: " + item);
+				Log.d(TAG, "WebRequest SERVER RESPONSE: " + item);
 			}
 
 		} catch (IOException e) {
@@ -94,7 +94,7 @@ public class PostDataTask extends AbstractUpdateTask<String, LoadItem> {
 	protected void onPostExecute(Integer result) {
 		blockScreenRotation(false);
 
-		if(isCancelled()) {
+		if (isCancelled()) {
 			return;
 		}
 		taskFace.showProgress(false);

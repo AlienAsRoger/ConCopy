@@ -13,8 +13,6 @@ import static android.provider.ContactsContract.CommonDataKinds.Phone;
 import static android.provider.ContactsContract.CommonDataKinds.StructuredName;
 
 
-
-
 /**
  * Used to get a much amout of data, because query is performs in UI thread
  */
@@ -32,7 +30,7 @@ public class QueryForCursorOldTask extends AbstractUpdateTask<Cursor, Long> {
 
 		// Run query
 		Uri uri = ContactsContract.Contacts.CONTENT_URI;
-		String[] projection = new String[] {
+		String[] projection = new String[]{
 				ContactsContract.Contacts._ID,
 				ContactsContract.Contacts.DISPLAY_NAME
 		};
