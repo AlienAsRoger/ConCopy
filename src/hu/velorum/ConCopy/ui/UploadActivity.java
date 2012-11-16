@@ -45,7 +45,7 @@ public class UploadActivity extends Activity implements View.OnClickListener {
 
 		new GetDetailsFromContactsTask(new DbUpdateListener(), params, new ArrayList<ContactItem>()).executeTask();
 
-//		new QueryForCursorTask2(new ContactsCursorUpdateListener()).executeTask();
+//		new QueryForCursorOldTask(new ContactsCursorUpdateListener()).executeTask();
 	}
 
 	private class DbUpdateListener extends AbstractUpdateListener<Cursor> implements ContactItemGetFace<ContactItem, Cursor> {

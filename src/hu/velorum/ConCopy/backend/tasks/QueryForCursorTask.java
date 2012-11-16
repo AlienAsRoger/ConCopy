@@ -8,12 +8,12 @@ import hu.velorum.ConCopy.backend.interfaces.TaskUpdateInterface;
 import hu.velorum.ConCopy.backend.statics.StaticData;
 
 
-public class QueryForCursorNewTask extends AbstractUpdateTask<Cursor, Long> {
+public class QueryForCursorTask extends AbstractUpdateTask<Cursor, Long> {
 
     protected ContentResolver contentResolver;
     private QueryParams params;
 
-    public QueryForCursorNewTask(TaskUpdateInterface<Cursor> taskFace, QueryParams params) {
+    public QueryForCursorTask(TaskUpdateInterface<Cursor> taskFace, QueryParams params) {
         super(taskFace);
         this.params = params;
         contentResolver = taskFace.getMeContext().getContentResolver();

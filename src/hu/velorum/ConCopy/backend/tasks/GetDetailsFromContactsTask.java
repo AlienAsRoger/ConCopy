@@ -45,7 +45,7 @@ ASCII encoding
 which is the "access code" we need to display to the user
 
 */
-public class GetDetailsFromContactsTask extends QueryForCursorNewTask {
+public class GetDetailsFromContactsTask extends QueryForCursorTask {
 
 	int emailType = Email.TYPE_WORK;
 	private static final String TAG = "GetEmailsTask";

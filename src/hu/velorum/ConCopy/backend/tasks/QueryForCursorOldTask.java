@@ -18,11 +18,11 @@ import static android.provider.ContactsContract.CommonDataKinds.StructuredName;
 /**
  * Used to get a much amout of data, because query is performs in UI thread
  */
-public class QueryForCursorTask2 extends AbstractUpdateTask<Cursor, Long> {
+public class QueryForCursorOldTask extends AbstractUpdateTask<Cursor, Long> {
 
 	private ContentResolver contentResolver;
 
-	public QueryForCursorTask2(TaskUpdateInterface<Cursor> taskFace) {
+	public QueryForCursorOldTask(TaskUpdateInterface<Cursor> taskFace) {
 		super(taskFace);
 		contentResolver = taskFace.getMeContext().getContentResolver();
 	}
