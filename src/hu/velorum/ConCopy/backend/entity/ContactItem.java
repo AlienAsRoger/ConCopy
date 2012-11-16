@@ -80,7 +80,7 @@ second phone number (if the contact has a second phone number),type of second ph
 		if (phoneItemTwo != null && !TextUtils.isEmpty(phoneItemTwo.getPhone())) {
 			optionalPart = TAB_SYMBOL + phoneItemOne.getPhone() + TAB_SYMBOL + phoneItemOne.getType();
 		}
-		return requiredPart + optionalPart;
+		return requiredPart + optionalPart + StaticData.SYMBOL_NEW_STR;
 	}
 
 }

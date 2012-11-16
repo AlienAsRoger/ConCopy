@@ -44,8 +44,6 @@ public class UploadActivity extends Activity implements View.OnClickListener {
 		params.setUri(ContactsContract.Contacts.CONTENT_URI);
 
 		new GetDetailsFromContactsTask(new DbUpdateListener(), params, new ArrayList<ContactItem>()).executeTask();
-
-//		new QueryForCursorOldTask(new ContactsCursorUpdateListener()).executeTask();
 	}
 
 	private class DbUpdateListener extends AbstractUpdateListener<Cursor> implements ContactItemGetFace<ContactItem, Cursor> {
@@ -59,11 +57,9 @@ public class UploadActivity extends Activity implements View.OnClickListener {
 		public void updateContacts(List<ContactItem> itemsList) {
 
 
-			Log.d("OUT", "version 2.0");
+			Log.d("OUT", getString(R.string.version_number));
 			for (ContactItem contactItem : itemsList) {
-				Log.d("OUT", "" + contactItem.getOutputLine()
-
-				);
+				Log.d("OUT", "" + contactItem.getOutputLine());
 			}
 
 //			updateList(itemsList);

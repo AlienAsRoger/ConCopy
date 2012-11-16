@@ -16,6 +16,7 @@ public class LoadItem {
 
     private String loadPath;
 	private List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+	private String postEntity;
 
 	public LoadItem() {
 		nameValuePairs = new ArrayList<NameValuePair>();
@@ -64,5 +65,13 @@ public class LoadItem {
 
 	public void clearParams() {
 		nameValuePairs.clear();
+	}
+
+	public String getPostEntity() {
+		return postEntity;
+	}
+
+	public void setPostEntity(String postEntity) {
+		this.postEntity = postEntity;
 	}
 }

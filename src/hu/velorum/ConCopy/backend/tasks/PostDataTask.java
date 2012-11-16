@@ -8,12 +8,13 @@ import hu.velorum.ConCopy.backend.statics.StaticData;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -47,7 +48,13 @@ public class PostDataTask extends AbstractUpdateTask<String, LoadItem> {
 
 		HttpPost httpPost = new HttpPost(url);
 		try {
-			httpPost.setEntity(new UrlEncodedFormEntity(loadItem.getRequestParams()));
+			final byte[] utf8Bytes = loadItem.getPostEntity().getBytes("UTF-8");
+			final String length = String.valueOf(utf8Bytes.length);
+
+			httpPost.addHeader("Content-Type", "text/plain; charset=utf-8");
+			httpPost.addHeader("Content-Length", length);  // in bytes
+
+			httpPost.setEntity(new StringEntity(loadItem.getPostEntity(), HTTP.UTF_8));
 		} catch (UnsupportedEncodingException e) {
 			Log.d(TAG, e.toString());
 		}
