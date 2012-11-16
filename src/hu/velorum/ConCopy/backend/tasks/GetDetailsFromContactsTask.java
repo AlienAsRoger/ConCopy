@@ -2,7 +2,6 @@ package hu.velorum.ConCopy.backend.tasks;
 
 import android.database.Cursor;
 import android.provider.BaseColumns;
-import android.provider.ContactsContract;
 import hu.velorum.ConCopy.backend.entity.ContactItem;
 import hu.velorum.ConCopy.backend.entity.PhoneItem;
 import hu.velorum.ConCopy.backend.entity.QueryParams;
@@ -14,6 +13,7 @@ import hu.velorum.ConCopy.ui.UploadFace;
 import java.util.List;
 
 import static android.provider.ContactsContract.CommonDataKinds.*;
+import static android.provider.ContactsContract.Data;
 
 
 /*
@@ -45,11 +45,17 @@ which is the "access code" we need to display to the user
 */
 public class GetDetailsFromContactsTask extends QueryForCursorTask {
 
+	/*
+	If first name or last name is empty, then please write an empty string instead of "null"
+	We haven't discussed yet, but here are the codes for phone number types:
+
+	*/
+
 	public static final String AND_ARG_ = " = ?";
-	int emailType = Email.TYPE_WORK;
 	private static final String TAG = "GetEmailsTask";
 	private List<ContactItem> contacts;
 	private ContactItemGetFace<ContactItem, Cursor> contactsUpdateFace;
+	private static final String[] arguments1 = new String[1];
 
 	public GetDetailsFromContactsTask(ContactItemGetFace<ContactItem, Cursor> taskFace, QueryParams params,
 									  List<ContactItem> contacts) {
@@ -61,48 +67,48 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 	@Override
 	protected int doAdditionToCursor(Cursor cursor) {
 		int totalCnt = cursor.getCount();
-		float num = 0;
+//		float num = 0;
+		int num = 0;
 
 		while (cursor.moveToNext()) {
 
-			int progress = (int) ((num++ / (float) totalCnt) * 100);
+//			int progress = (int) ((num++ / (float) totalCnt) * 100);
+			int progress = num++;
 
-			String id = cursor.getString(cursor.getColumnIndex(BaseColumns._ID));
+			String id = DBDataManager.getString(cursor, BaseColumns._ID);
+//			String id = DBDataManager.getString(cursor, ContactsContract.RawContacts.CONTACT_ID);
 //			String contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 
 
 			ContactItem contactItem = new ContactItem();
 
-
+			arguments1[0] = id;
 			Cursor phoneCursor = contentResolver.query(Phone.CONTENT_URI, PHONE_PROJECTION,
-					Phone.CONTACT_ID + AND_ARG_, new String[]{id}, null);
+					PHONE_SELECTION, arguments1 , null);
 
 			Cursor emailsCursor = contentResolver.query(Email.CONTENT_URI, EMAIL_PROJECTION,
-					Email.CONTACT_ID + AND_ARG_, new String[]{id}, null);
+					EMAIL_SELECTION, arguments1, null);
 
-			String phoneNumber;
-			String phoneType;
 //			String phoneLabel = null;
 			int phoneCnt = 0;
 			if (phoneCursor != null && phoneCursor.moveToFirst()) {
 				do {
-					phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(Phone.NUMBER));
-					phoneType = phoneCursor.getString(phoneCursor.getColumnIndex(Phone.TYPE));
+
+					String phoneNumber = DBDataManager.getString(phoneCursor, Phone.NUMBER);
+					String phoneType = DBDataManager.getString(phoneCursor, Phone.TYPE);
+					int preferred = DBDataManager.getInt(phoneCursor, Phone.IS_PRIMARY);
 
 					final PhoneItem phoneItem = new PhoneItem();
 					phoneItem.setPhone(phoneNumber);
-					phoneItem.setType(phoneType);
+					phoneItem.setType(Integer.parseInt(phoneType), preferred > 0);
 //					phoneLabel = phoneCursor.getString(phoneCursor.getColumnIndex(Phone.LABEL));
 
-//					Log.d(TAG, "Contact Name = " + contactName
-////						+ " contact mail = " + contactEmail
-//							+ " email type = " + emailType
-//							+ " phoneOne = " + phoneOne
-//							+ " phoneTwo = " + phoneType
-//							+ " phoneLabel = " + phoneLabel
-//					);
+					if (phoneCnt == 0) {
+						contactItem.setPhoneItemOne(phoneItem);
+					} else {
+						contactItem.setPhoneItemTwo(phoneItem);
+					}
 
-					contactItem.setPhoneItemOne(phoneItem);
 					if (++phoneCnt == 2) {   // we need only 2 phones
 						break;
 					}
@@ -112,23 +118,20 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 			}
 
 
-			Cursor dataCursor = contentResolver.query(ContactsContract.Data.CONTENT_URI,
-					new String[]{ContactsContract.Data._ID, StructuredName.GIVEN_NAME,
-							StructuredName.FAMILY_NAME
-					}, null, null, null);
+			Cursor dataCursor = contentResolver.query(Data.CONTENT_URI,
+					DATA_PROJECTION, DATA_SELECTION, arguments1, null);
 
 			if (dataCursor != null && dataCursor.moveToFirst()) {
-
-				do {
+//				do {
+				dataCursor.moveToNext(); // first position return empty data
 					String firstName = DBDataManager.getString(dataCursor, StructuredName.GIVEN_NAME);
 					contactItem.setFirstName(firstName);
-//					Log.d("Data", " first name = " + firstName);
+	//					Log.d("Data", " first name = " + firstName);
 
 					String lastName = DBDataManager.getString(dataCursor, StructuredName.FAMILY_NAME);
 					contactItem.setLastName(lastName);
-//					Log.d("Data", " lastName = " + lastName);
-
-				} while (dataCursor.moveToNext());
+	//					Log.d("Data", " lastName = " + lastName);
+//				}while (dataCursor.moveToNext());
 			}
 
 			if (emailsCursor != null && emailsCursor.moveToFirst()) {
@@ -147,6 +150,7 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 			result = StaticData.VALUE_DOESNT_EXIST;
 		}
 
+		cursor.close();
 
 		return result;
 	}
@@ -163,15 +167,27 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 			taskFace.errorHandle(result);
 		}
 	}
+	private static final String PHONE_SELECTION = Phone.CONTACT_ID + AND_ARG_;
+	private static final String EMAIL_SELECTION = Email.CONTACT_ID + AND_ARG_;
+	private static final String DATA_SELECTION = Data.CONTACT_ID + AND_ARG_ /*+ " AND "
+			+ StructuredName.GIVEN_NAME + " != NULL"*/;
+
 
 	private static final String[] PHONE_PROJECTION = new String[]{
 			Phone._ID,
 			Phone.TYPE,
-			Phone.NUMBER
+			Phone.NUMBER,
+			Phone.IS_PRIMARY
 	};
 
 	private static final String[] EMAIL_PROJECTION = new String[]{
 			Email._ID,
 			Email.ADDRESS
+	};
+	private static final String[] DATA_PROJECTION = new String[]{
+			Data._ID,
+			StructuredName.GIVEN_NAME,
+			StructuredName.FAMILY_NAME
+
 	};
 }

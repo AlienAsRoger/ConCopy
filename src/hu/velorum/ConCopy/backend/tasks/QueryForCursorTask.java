@@ -39,7 +39,7 @@ public class QueryForCursorTask extends AbstractUpdateTask<Cursor, Long> {
 			item = contentResolver.query(uri, params.getProjection(), params.getSelection(), params.getArguments(), params.getOrder());
 		}
 
-		if (item.moveToFirst()) {
+		if (item != null && item.moveToFirst()) {
 			result = doAdditionToCursor(item);
 		} else {
 			result = StaticData.VALUE_DOESNT_EXIST;

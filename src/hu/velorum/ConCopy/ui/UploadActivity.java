@@ -98,7 +98,7 @@ public class UploadActivity extends Activity implements View.OnClickListener, Up
 			@Override
 			public void run() {
 				if (context != null) {
-					uploadTxt.setText(" progress % " + current);
+					uploadTxt.setText(getString(R.string.contacts_parsed,  current));
 				}
 			}
 		});
@@ -110,7 +110,7 @@ public class UploadActivity extends Activity implements View.OnClickListener, Up
 			@Override
 			public void run() {
 				if (context != null) {
-					uploadTxt.setText(" your id = " + result);
+					uploadTxt.setText(getString(R.string.upload_finished_id, result));
 				}
 			}
 		});

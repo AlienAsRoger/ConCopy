@@ -48,12 +48,9 @@ public class PostDataTask extends AbstractUpdateTask<String, LoadItem> {
 
 		HttpPost httpPost = new HttpPost(url);
 		try {
-			final byte[] utf8Bytes = loadItem.getPostEntity().getBytes("UTF-8");
-			final String length = String.valueOf(utf8Bytes.length);
 
 			httpPost.addHeader("Content-Type", "text/plain; charset=utf-8");
-//			httpPost.addHeader("Content-Length", length);  // in bytes
-
+			Log.d(TAG, " string entity = " + loadItem.getPostEntity());
 			httpPost.setEntity(new StringEntity(loadItem.getPostEntity(), HTTP.UTF_8));
 		} catch (UnsupportedEncodingException e) {
 			Log.d(TAG, e.toString());

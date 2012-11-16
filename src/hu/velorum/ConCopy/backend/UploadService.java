@@ -69,6 +69,8 @@ public class UploadService extends Service {
 	private void getContacts() {
 		QueryParams params = new QueryParams();
 		params.setUri(ContactsContract.Contacts.CONTENT_URI);
+//		params.setUri(ContactsContract.RawContacts.CONTENT_URI);
+//		params.setProjection(new String[]{ContactsContract.RawContacts.CONTACT_ID});
 		params.setProjection(new String[]{BaseColumns._ID});
 		new GetDetailsFromContactsTask(new DbUpdateListener(), params, new ArrayList<ContactItem>()).executeTask();
 	}
@@ -81,7 +83,7 @@ public class UploadService extends Service {
 		@Override
 		public void updateContacts(List<ContactItem> itemsList) {
 			StringBuilder builder = new StringBuilder();
-			builder.append(getString(R.string.version_number)).append(StaticData.SYMBOL_NEW_STR);
+			builder.append(RestHelper.VERSION).append(StaticData.SYMBOL_NEW_STR);
 			for (ContactItem contactItem : itemsList) {
 				builder.append(contactItem.getOutputLine());
 			}
@@ -97,14 +99,14 @@ public class UploadService extends Service {
 			if (uploadInterface.exist()) {
 				uploadInterface.onProgressUpdated(current, total);
 			} else if(exist()) {
-				Toast.makeText(context, " progress % " + current, Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, getString(R.string.contacts_parsed, current), Toast.LENGTH_SHORT).show();
 			}
 		}
 
 		@Override
 		public void onUploadFinished(String result) {
 			if (!uploadInterface.exist() && exist()) {
-				Toast.makeText(context, " upload finished id = " + result, Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, getString(R.string.upload_finished_id, result), Toast.LENGTH_SHORT).show();
 			}
 		}
 
@@ -123,6 +125,7 @@ public class UploadService extends Service {
 		public void updateData(String returnedObj) {
 			super.updateData(returnedObj);
 			uploadInterface.onUploadFinished(returnedObj);
+			stopSelf();
 		}
 	}
 

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">ConCopy</string>
+
 	<string name="about">About</string>
 	<string name="upload">Upload</string>
 	<string name="upload_contacts_to_server">Upload contacts to server</string>
-	<string name="version_number">version 2.0</string>
+	<string name="contacts_parsed">Contacts parsed %d</string>
+	<string name="upload_finished_id">Your contacts uploaded sucessfully! Your id = %s</string>
 </resources>
