@@ -1,11 +1,14 @@
 package hu.velorum.ConCopy.backend;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Binder;
 import android.os.IBinder;
+import android.provider.BaseColumns;
 import android.provider.ContactsContract;
+import android.widget.Toast;
 import hu.velorum.ConCopy.R;
 import hu.velorum.ConCopy.backend.entity.ContactItem;
 import hu.velorum.ConCopy.backend.entity.LoadItem;
@@ -31,6 +34,13 @@ public class UploadService extends Service {
 
 	private final Binder binder = new LocalService();
 	private UploadFace uploadInterface;
+	private Context context;
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		context = this;
+	}
 
 	public void setUploadInterface(UploadFace uploadInterface) {
 		this.uploadInterface = uploadInterface;
@@ -59,7 +69,7 @@ public class UploadService extends Service {
 	private void getContacts() {
 		QueryParams params = new QueryParams();
 		params.setUri(ContactsContract.Contacts.CONTENT_URI);
-
+		params.setProjection(new String[]{BaseColumns._ID});
 		new GetDetailsFromContactsTask(new DbUpdateListener(), params, new ArrayList<ContactItem>()).executeTask();
 	}
 
@@ -84,13 +94,23 @@ public class UploadService extends Service {
 
 		@Override
 		public void onProgressUpdated(int current, int total) {
-			uploadInterface.onProgressUpdated(current, total);
-			// TODO change body of implemented methods use File | Settings | File Templates.
+			if (uploadInterface.exist()) {
+				uploadInterface.onProgressUpdated(current, total);
+			} else if(exist()) {
+				Toast.makeText(context, " progress % " + current, Toast.LENGTH_SHORT).show();
+			}
 		}
 
 		@Override
-		public void onUploadFinished(int result) {
-			// TODO change body of implemented methods use File | Settings | File Templates.
+		public void onUploadFinished(String result) {
+			if (!uploadInterface.exist() && exist()) {
+				Toast.makeText(context, " upload finished id = " + result, Toast.LENGTH_SHORT).show();
+			}
+		}
+
+		@Override
+		public boolean exist() {
+			return context != null;
 		}
 	}
 
@@ -102,7 +122,7 @@ public class UploadService extends Service {
 		@Override
 		public void updateData(String returnedObj) {
 			super.updateData(returnedObj);
-
+			uploadInterface.onUploadFinished(returnedObj);
 		}
 	}
 

@@ -9,5 +9,7 @@ public interface UploadFace {
 
 	void onProgressUpdated(int current, int total);
 
-	void onUploadFinished(int result);
+	void onUploadFinished(String result);
+
+	boolean exist();
 }

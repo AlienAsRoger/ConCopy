@@ -3,7 +3,6 @@ package hu.velorum.ConCopy.backend.tasks;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
-import android.util.Log;
 import hu.velorum.ConCopy.backend.entity.ContactItem;
 import hu.velorum.ConCopy.backend.entity.PhoneItem;
 import hu.velorum.ConCopy.backend.entity.QueryParams;
@@ -46,6 +45,7 @@ which is the "access code" we need to display to the user
 */
 public class GetDetailsFromContactsTask extends QueryForCursorTask {
 
+	public static final String AND_ARG_ = " = ?";
 	int emailType = Email.TYPE_WORK;
 	private static final String TAG = "GetEmailsTask";
 	private List<ContactItem> contacts;
@@ -68,24 +68,23 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 			int progress = (int) ((num++ / (float) totalCnt) * 100);
 
 			String id = cursor.getString(cursor.getColumnIndex(BaseColumns._ID));
-			String contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+//			String contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 
 
 			ContactItem contactItem = new ContactItem();
 
 
-			Cursor phoneCursor = contentResolver.query(Phone.CONTENT_URI,
-					null,
-					Phone.CONTACT_ID + " = ?", new String[]{id}, null);
+			Cursor phoneCursor = contentResolver.query(Phone.CONTENT_URI, PHONE_PROJECTION,
+					Phone.CONTACT_ID + AND_ARG_, new String[]{id}, null);
 
-//			Cursor emailsCursor = contentResolver.query(Email.CONTENT_URI, null,
-//					Email.CONTACT_ID + " = ?" /*+ id*/, new String[]{id}, null);
+			Cursor emailsCursor = contentResolver.query(Email.CONTENT_URI, EMAIL_PROJECTION,
+					Email.CONTACT_ID + AND_ARG_, new String[]{id}, null);
 
-			String phoneNumber = null;
-			String phoneType = null;
+			String phoneNumber;
+			String phoneType;
 //			String phoneLabel = null;
 			int phoneCnt = 0;
-			if (phoneCursor.moveToFirst()) {
+			if (phoneCursor != null && phoneCursor.moveToFirst()) {
 				do {
 					phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(Phone.NUMBER));
 					phoneType = phoneCursor.getString(phoneCursor.getColumnIndex(Phone.TYPE));
@@ -108,6 +107,8 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 						break;
 					}
 				} while (phoneCursor.moveToNext());
+			} else {
+				continue;
 			}
 
 
@@ -116,29 +117,24 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 							StructuredName.FAMILY_NAME
 					}, null, null, null);
 
-			if (dataCursor.moveToFirst()) {
-				String indexGivenName = StructuredName.GIVEN_NAME;
-				String indexFamilyName = StructuredName.FAMILY_NAME;
+			if (dataCursor != null && dataCursor.moveToFirst()) {
 
 				do {
-					String firstName = DBDataManager.getString(dataCursor, indexGivenName);
+					String firstName = DBDataManager.getString(dataCursor, StructuredName.GIVEN_NAME);
 					contactItem.setFirstName(firstName);
-					Log.d("Data", " first name = " + firstName);
+//					Log.d("Data", " first name = " + firstName);
 
-					String lastName = DBDataManager.getString(dataCursor, indexFamilyName);
+					String lastName = DBDataManager.getString(dataCursor, StructuredName.FAMILY_NAME);
 					contactItem.setLastName(lastName);
-					Log.d("Data", " lastName = " + lastName);
+//					Log.d("Data", " lastName = " + lastName);
 
 				} while (dataCursor.moveToNext());
 			}
 
-//			String contactEmail = null;
-//			if (emailsCursor.moveToFirst()) {
-//				contactEmail = emailsCursor.getString(emailsCursor.getColumnIndex(Email.DATA));
-//			}
+			if (emailsCursor != null && emailsCursor.moveToFirst()) {
+				contactItem.setEmail(emailsCursor.getString(emailsCursor.getColumnIndex(Email.DATA)));
+			}
 
-//			contactItem.setEmail(contactEmail);
-			contactItem.setFirstName(contactName);
 
 			contacts.add(contactItem);
 
@@ -167,4 +163,15 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 			taskFace.errorHandle(result);
 		}
 	}
+
+	private static final String[] PHONE_PROJECTION = new String[]{
+			Phone._ID,
+			Phone.TYPE,
+			Phone.NUMBER
+	};
+
+	private static final String[] EMAIL_PROJECTION = new String[]{
+			Email._ID,
+			Email.ADDRESS
+	};
 }

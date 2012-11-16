@@ -22,7 +22,7 @@ public class RestHelper {
 	public static final String R_YOUR_MOVE = "Success+1";
 	public static final String R_OPPONENT_MOVE = "Success+0";
 
-	public static final String BASE_URL = "http://posttestserver.com/post.php";
+	public static final String BASE_URL = "https://velorum-1.appspot.com/upload";
 
 
 	/* Parameters */

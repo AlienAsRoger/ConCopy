@@ -6,6 +6,7 @@
 	android:padding="20dip">
 
 	<TextView
+		android:id="@+id/uploadTxt"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/upload_contacts_to_server" />

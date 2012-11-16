@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import hu.velorum.ConCopy.R;
 import hu.velorum.ConCopy.backend.UploadService;
 
@@ -24,6 +26,7 @@ public class UploadActivity extends Activity implements View.OnClickListener, Up
 	private Button uploadBtn;
 	private UploadService uploadService;
 	private Context context;
+	private TextView uploadTxt;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -80,26 +83,41 @@ public class UploadActivity extends Activity implements View.OnClickListener, Up
 		}
 	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		doUnbindService();
-	}
-
 	private void widgetsInit() {
 		uploadBtn = (Button) findViewById(R.id.uploadBtn);
 		uploadBtn.setOnClickListener(this);
 		uploadBtn.setEnabled(false);
+
+		uploadTxt = (TextView) findViewById(R.id.uploadTxt);
 	}
 
 	@Override
-	public void onProgressUpdated(int current, int total) {
-
-		// TODO change body of implemented methods use File | Settings | File Templates.
+	public void onProgressUpdated(final int current, int total) {
+		Log.d("TEST", " progress " + current);
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if (context != null) {
+					uploadTxt.setText(" progress % " + current);
+				}
+			}
+		});
 	}
 
 	@Override
-	public void onUploadFinished(int result) {
-		// TODO change body of implemented methods use File | Settings | File Templates.
+	public void onUploadFinished(final String result) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if (context != null) {
+					uploadTxt.setText(" your id = " + result);
+				}
+			}
+		});
+	}
+
+	@Override
+	public boolean exist() {
+		return context != null;
 	}
 }
