@@ -1,5 +1,7 @@
 <resources>
     <style name="MyAppTheme" parent="AppTheme">
         <item name="android:textAppearanceSmall">@style/Text</item>
+		<item name="android:seekBarStyle">@style/SeekBar</item>
+		<item name="android:progressBarStyleHorizontal">@style/SeekBar</item>
     </style>
 </resources>

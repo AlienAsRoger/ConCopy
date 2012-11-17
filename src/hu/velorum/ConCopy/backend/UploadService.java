@@ -106,7 +106,7 @@ public class UploadService extends Service {
 		@Override
 		public void onUploadFinished(String result) {
 			if (!uploadInterface.exist() && exist()) {
-				Toast.makeText(context, getString(R.string.upload_finished_id, result), Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, getString(R.string.upload_finished, result), Toast.LENGTH_SHORT).show();
 			}
 		}
 
@@ -114,11 +114,21 @@ public class UploadService extends Service {
 		public boolean exist() {
 			return context != null;
 		}
+
+		@Override
+		public void onUploading() {
+
+		}
 	}
 
 	private class PostDataListener extends AbstractUpdateListener<String> {
 		public PostDataListener() {
 			super(UploadService.this);
+		}
+
+		@Override
+		public void showProgress(boolean show) {
+			uploadInterface.onUploading();
 		}
 
 		@Override

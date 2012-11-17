@@ -1,22 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:robo="http://schemas.android.com/apk/res/hu.velorum.ConCopy"
 	android:orientation="vertical"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:padding="20dip">
+	android:padding="20dip"
+	android:background="@drawable/white_screen_background"
+	>
 
-	<TextView
+	<hu.velorum.RoboTextView
 		android:id="@+id/uploadTxt"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/upload_contacts_to_server" />
+		android:layout_centerHorizontal="true"
+		android:gravity="center"
+		android:textColor="@color/main_back_2"
+		android:layout_centerInParent="true"
+		android:textSize="20sp"
+		android:visibility="invisible"
+		/>
 
-	<Button
+	<ProgressBar
+		android:id="@+id/uploadProgress"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:indeterminate="true"
+		android:max="100"
+		style="@style/SeekBar"
+		android:padding="6dip"
+		android:layout_below="@id/uploadTxt"
+		android:visibility="invisible"
+		/>
+
+	<hu.velorum.RoboButton
 		android:id="@+id/uploadBtn"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_centerInParent="true"
 		android:text="@string/upload"
+		android:visibility="visible"
+		android:textSize="17sp"
+		/>
+
+	<hu.velorum.RoboTextView
+		android:id="@+id/docIdTxt"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:gravity="center"
+		android:textColor="@color/main_back_2"
+		android:layout_centerInParent="true"
+		android:textSize="22sp"
+		android:visibility="invisible"
+		android:layout_below="@id/uploadTxt"
+		robo:ttf="Bold"
 		/>
 </RelativeLayout>
 

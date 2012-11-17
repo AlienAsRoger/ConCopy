@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="main_back_1">#FF5DD300</color>
+	<color name="main_back_2">#FF197421</color>
+	<color name="progress_color">#ff35a1a2</color>
+</resources>

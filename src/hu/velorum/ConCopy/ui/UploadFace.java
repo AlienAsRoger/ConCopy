@@ -12,4 +12,6 @@ public interface UploadFace {
 	void onUploadFinished(String result);
 
 	boolean exist();
+
+	void onUploading();
 }

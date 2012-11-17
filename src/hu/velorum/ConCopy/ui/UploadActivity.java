@@ -1,6 +1,6 @@
 package hu.velorum.ConCopy.ui;
 
-import android.app.Activity;
+import actionbarcompat.ActionBarActivity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import hu.velorum.ConCopy.R;
 import hu.velorum.ConCopy.backend.UploadService;
@@ -20,13 +21,15 @@ import hu.velorum.ConCopy.backend.UploadService;
  * @author alien_roger
  * @created at: 14.11.12 22:22
  */
-public class UploadActivity extends Activity implements View.OnClickListener, UploadFace {
+public class UploadActivity extends ActionBarActivity implements View.OnClickListener, UploadFace {
 
 	private boolean isBound;
 	private Button uploadBtn;
 	private UploadService uploadService;
 	private Context context;
 	private TextView uploadTxt;
+	private ProgressBar uploadProgress;
+	private TextView docIdTxt;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -89,16 +92,28 @@ public class UploadActivity extends Activity implements View.OnClickListener, Up
 		uploadBtn.setEnabled(false);
 
 		uploadTxt = (TextView) findViewById(R.id.uploadTxt);
+		docIdTxt = (TextView) findViewById(R.id.docIdTxt);
+
+		uploadProgress = (ProgressBar) findViewById(R.id.uploadProgress);
 	}
 
 	@Override
-	public void onProgressUpdated(final int current, int total) {
+	public void onProgressUpdated(final int current, final int total) {
 		Log.d("TEST", " progress " + current);
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
+
 				if (context != null) {
-					uploadTxt.setText(getString(R.string.contacts_parsed,  current));
+					uploadBtn.setVisibility(View.GONE);
+
+					uploadProgress.setVisibility(View.VISIBLE);
+//					uploadProgress.setMax(total);
+//					uploadProgress.setIndeterminate(false);
+//					uploadProgress.setProgress(current);
+
+					uploadTxt.setVisibility(View.VISIBLE);
+					uploadTxt.setText(getString(R.string.contacts_parsed, current));
 				}
 			}
 		});
@@ -110,7 +125,12 @@ public class UploadActivity extends Activity implements View.OnClickListener, Up
 			@Override
 			public void run() {
 				if (context != null) {
-					uploadTxt.setText(getString(R.string.upload_finished_id, result));
+					uploadProgress.setVisibility(View.GONE);
+
+					uploadTxt.setText(getString(R.string.upload_finished));
+
+					docIdTxt.setVisibility(View.VISIBLE);
+					docIdTxt.setText(getString(R.string.your_id, result));
 				}
 			}
 		});
@@ -119,5 +139,12 @@ public class UploadActivity extends Activity implements View.OnClickListener, Up
 	@Override
 	public boolean exist() {
 		return context != null;
+	}
+
+	@Override
+	public void onUploading() {
+		if (context != null) {
+			uploadTxt.setText(getString(R.string.loading_to_server));
+		}
 	}
 }
