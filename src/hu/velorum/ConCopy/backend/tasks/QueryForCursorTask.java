@@ -44,6 +44,10 @@ public class QueryForCursorTask extends AbstractUpdateTask<Cursor, Long> {
 		} else {
 			result = StaticData.VALUE_DOESNT_EXIST;
 		}
+
+		if (item != null) {
+			item.close();
+		}
 		return result;
 	}
 

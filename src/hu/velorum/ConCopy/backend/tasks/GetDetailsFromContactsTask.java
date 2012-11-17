@@ -113,6 +113,8 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 						break;
 					}
 				} while (phoneCursor.moveToNext());
+
+				phoneCursor.close();
 			} else {
 				continue;
 			}
@@ -132,15 +134,17 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 					contactItem.setLastName(lastName);
 	//					Log.d("Data", " lastName = " + lastName);
 //				}while (dataCursor.moveToNext());
+				dataCursor.close();
 			}
 
 			if (emailsCursor != null && emailsCursor.moveToFirst()) {
 				contactItem.setEmail(emailsCursor.getString(emailsCursor.getColumnIndex(Email.DATA)));
+
+				emailsCursor.close();
 			}
 
 
 			contacts.add(contactItem);
-
 
 			((UploadFace) taskFace).onProgressUpdated(progress, totalCnt);
 		}
