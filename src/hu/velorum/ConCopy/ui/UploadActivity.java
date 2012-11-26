@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -30,6 +29,7 @@ public class UploadActivity extends ActionBarActivity implements View.OnClickLis
 	private TextView uploadTxt;
 	private ProgressBar uploadProgress;
 	private TextView docIdTxt;
+	private TextView infoTxt;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,6 +50,13 @@ public class UploadActivity extends ActionBarActivity implements View.OnClickLis
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.uploadBtn) {
+
+			infoTxt.setVisibility(View.INVISIBLE);
+
+			uploadBtn.setVisibility(View.INVISIBLE);
+
+			uploadTxt.setText(R.string.collecting_contacts);
+
 			uploadService.startUpload();
 		}
 	}
@@ -91,6 +98,7 @@ public class UploadActivity extends ActionBarActivity implements View.OnClickLis
 		uploadBtn.setOnClickListener(this);
 		uploadBtn.setEnabled(false);
 
+		infoTxt = (TextView) findViewById(R.id.infoTxt);
 		uploadTxt = (TextView) findViewById(R.id.uploadTxt);
 		docIdTxt = (TextView) findViewById(R.id.docIdTxt);
 
@@ -99,7 +107,6 @@ public class UploadActivity extends ActionBarActivity implements View.OnClickLis
 
 	@Override
 	public void onProgressUpdated(final int current, final int total) {
-		Log.d("TEST", " progress " + current);
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -108,9 +115,6 @@ public class UploadActivity extends ActionBarActivity implements View.OnClickLis
 					uploadBtn.setVisibility(View.GONE);
 
 					uploadProgress.setVisibility(View.VISIBLE);
-//					uploadProgress.setMax(total);
-//					uploadProgress.setIndeterminate(false);
-//					uploadProgress.setProgress(current);
 
 					uploadTxt.setVisibility(View.VISIBLE);
 					uploadTxt.setText(getString(R.string.contacts_parsed, current));

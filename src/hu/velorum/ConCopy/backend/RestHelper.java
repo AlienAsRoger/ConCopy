@@ -21,22 +21,14 @@ public class RestHelper {
 
 
 	/* Parameters */
-	public static final String P_USER_NAME = "username";
 
 
 	/* Returned Values */
-	public static final String R_ERROR_MESSAGE = "error_message";
 
 
 	/* Values */
-	public static final String V_RESIGN = "RESIGN";
 
-	public static final String V_ZERO = "0";
-	public static final String V_ONE = "1";
-
-	//private static final String TAG = "Encode";
-	public static final int MAX_ITEMS_CNT = 2000;
-
+	/* Constants */
 	private static final String Q_ = "?";
 	private static final String EQUALS = "=";
 	private static final String AND = "&";

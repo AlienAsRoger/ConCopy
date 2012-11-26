@@ -67,17 +67,13 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 	@Override
 	protected int doAdditionToCursor(Cursor cursor) {
 		int totalCnt = cursor.getCount();
-//		float num = 0;
 		int num = 0;
 
 		while (cursor.moveToNext()) {
 
-//			int progress = (int) ((num++ / (float) totalCnt) * 100);
 			int progress = num++;
 
 			String id = DBDataManager.getString(cursor, BaseColumns._ID);
-//			String id = DBDataManager.getString(cursor, ContactsContract.RawContacts.CONTACT_ID);
-//			String contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 
 
 			ContactItem contactItem = new ContactItem();
@@ -89,7 +85,6 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 			Cursor emailsCursor = contentResolver.query(Email.CONTENT_URI, EMAIL_PROJECTION,
 					EMAIL_SELECTION, arguments1, null);
 
-//			String phoneLabel = null;
 			int phoneCnt = 0;
 			if (phoneCursor != null && phoneCursor.moveToFirst()) {
 				do {
@@ -101,7 +96,6 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 					final PhoneItem phoneItem = new PhoneItem();
 					phoneItem.setPhone(phoneNumber);
 					phoneItem.setType(Integer.parseInt(phoneType), preferred > 0);
-//					phoneLabel = phoneCursor.getString(phoneCursor.getColumnIndex(Phone.LABEL));
 
 					if (phoneCnt == 0) {
 						contactItem.setPhoneItemOne(phoneItem);
@@ -124,16 +118,12 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 					DATA_PROJECTION, DATA_SELECTION, arguments1, null);
 
 			if (dataCursor != null && dataCursor.moveToFirst()) {
-//				do {
 				dataCursor.moveToNext(); // first position return empty data
 					String firstName = DBDataManager.getString(dataCursor, StructuredName.GIVEN_NAME);
 					contactItem.setFirstName(firstName);
-	//					Log.d("Data", " first name = " + firstName);
 
 					String lastName = DBDataManager.getString(dataCursor, StructuredName.FAMILY_NAME);
 					contactItem.setLastName(lastName);
-	//					Log.d("Data", " lastName = " + lastName);
-//				}while (dataCursor.moveToNext());
 				dataCursor.close();
 			}
 
@@ -173,8 +163,7 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 	}
 	private static final String PHONE_SELECTION = Phone.CONTACT_ID + AND_ARG_;
 	private static final String EMAIL_SELECTION = Email.CONTACT_ID + AND_ARG_;
-	private static final String DATA_SELECTION = Data.CONTACT_ID + AND_ARG_ /*+ " AND "
-			+ StructuredName.GIVEN_NAME + " != NULL"*/;
+	private static final String DATA_SELECTION = Data.CONTACT_ID + AND_ARG_ ;
 
 
 	private static final String[] PHONE_PROJECTION = new String[]{

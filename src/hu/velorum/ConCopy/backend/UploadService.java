@@ -69,8 +69,6 @@ public class UploadService extends Service {
 	private void getContacts() {
 		QueryParams params = new QueryParams();
 		params.setUri(ContactsContract.Contacts.CONTENT_URI);
-//		params.setUri(ContactsContract.RawContacts.CONTENT_URI);
-//		params.setProjection(new String[]{ContactsContract.RawContacts.CONTACT_ID});
 		params.setProjection(new String[]{BaseColumns._ID});
 		new GetDetailsFromContactsTask(new DbUpdateListener(), params, new ArrayList<ContactItem>()).executeTask();
 	}

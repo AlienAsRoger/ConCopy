@@ -3,10 +3,15 @@
 	<string name="app_name">ConCopy</string>
 
 	<string name="about">About</string>
+	<!--Splash Screen-->
+	<string name="splash_info">ConCopy will export your contacts to our server, so you can easily import them to your new phone.</string>
+
+	<!--Main Screen-->
 	<string name="upload">Upload Contacts</string>
 	<string name="upload_contacts_to_server">Upload contacts to server</string>
 	<string name="contacts_parsed">Contacts parsed %d</string>
 	<string name="upload_finished">Contacts uploaded sucessfully! </string>
 	<string name="your_id">Your id = %s</string>
 	<string name="loading_to_server">Loading to server</string>
+	<string name="collecting_contacts">Collecting Contacts</string>
 </resources>

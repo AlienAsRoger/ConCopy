@@ -53,10 +53,13 @@ second phone number (if the contact has a second phone number),type of second ph
 		if (phoneItemOne != null && !TextUtils.isEmpty(phoneItemOne.getPhone())) {
 			requiredPart +=  phoneItemOne.getPhone() + TAB_SYMBOL + phoneItemOne.getType();
 		}
-		String optionalPart = StaticData.SYMBOL_EMPTY;
+		String optionalPart = TAB_SYMBOL;
 		if (phoneItemTwo != null && !TextUtils.isEmpty(phoneItemTwo.getPhone())) {
-			optionalPart = TAB_SYMBOL + phoneItemTwo.getPhone() + TAB_SYMBOL + phoneItemTwo.getType();
+			optionalPart += phoneItemTwo.getPhone() + TAB_SYMBOL + phoneItemTwo.getType();
+		} else {
+			optionalPart += TAB_SYMBOL ;
 		}
+
 		String result = requiredPart + optionalPart + TAB_SYMBOL + email + StaticData.SYMBOL_NEW_STR;
 		Log.d("TEST", " result = " +result);
 		return result;

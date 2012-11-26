@@ -9,6 +9,23 @@
 	>
 
 	<hu.velorum.RoboTextView
+		android:id="@+id/infoTxt"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:gravity="center"
+		android:textColor="@color/main_back_2"
+		android:paddingTop="40dip"
+		android:textSize="28sp"
+		android:text="@string/splash_info"
+		robo:ttf="Thin"
+		style="@style/DarkShadowBottom"
+		/>
+
+
+
+
+	<hu.velorum.RoboTextView
 		android:id="@+id/uploadTxt"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
@@ -18,6 +35,7 @@
 		android:layout_centerInParent="true"
 		android:textSize="20sp"
 		android:visibility="invisible"
+		style="@style/DarkShadowBottom"
 		/>
 
 	<ProgressBar
@@ -41,6 +59,7 @@
 		android:visibility="visible"
 		android:textSize="17sp"
 		android:textColor="@color/main_back_2"
+		style="@style/DarkShadowBottom"
 		/>
 
 	<hu.velorum.RoboTextView
@@ -55,6 +74,7 @@
 		android:visibility="invisible"
 		android:layout_below="@id/uploadTxt"
 		robo:ttf="Bold"
+		style="@style/DarkShadowBottom"
 		/>
 </RelativeLayout>
 
