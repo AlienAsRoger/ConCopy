@@ -14,4 +14,8 @@
 	<string name="your_id">Your id = %s</string>
 	<string name="loading_to_server">Loading to server</string>
 	<string name="collecting_contacts">Collecting Contacts</string>
+	<string name="wireless_settings">Wireless settings</string>
+	<string name="no_network">No network</string>
+	<string name="warning">Warning</string>
+	<string name="network_unreachable">Network unreachable</string>
 </resources>

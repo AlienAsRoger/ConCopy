@@ -14,4 +14,6 @@ public interface UploadFace {
 	boolean exist();
 
 	void onUploading();
+
+	void onError();
 }

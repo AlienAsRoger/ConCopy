@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import hu.velorum.ConCopy.R;
 import hu.velorum.ConCopy.backend.UploadService;
+import hu.velorum.ConCopy.utils.AppUtils;
 
 /**
  * UploadActivity class
@@ -50,6 +51,9 @@ public class UploadActivity extends ActionBarActivity implements View.OnClickLis
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.uploadBtn) {
+			if(!AppUtils.checkNetworkSettings(this)){
+				return;
+			}
 
 			infoTxt.setVisibility(View.INVISIBLE);
 
@@ -150,5 +154,17 @@ public class UploadActivity extends ActionBarActivity implements View.OnClickLis
 		if (context != null) {
 			uploadTxt.setText(getString(R.string.loading_to_server));
 		}
+	}
+
+	@Override
+	public void onError() {
+		if (context != null){
+			AppUtils.showNoNetworkDialog(this);
+
+			uploadProgress.setVisibility(View.GONE);
+
+			uploadTxt.setText(R.string.network_unreachable);
+		}
+
 	}
 }

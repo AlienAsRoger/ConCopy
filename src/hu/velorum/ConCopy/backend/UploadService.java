@@ -115,7 +115,10 @@ public class UploadService extends Service {
 
 		@Override
 		public void onUploading() {
+		}
 
+		@Override
+		public void onError() {
 		}
 	}
 
@@ -134,6 +137,14 @@ public class UploadService extends Service {
 			super.updateData(returnedObj);
 			uploadInterface.onUploadFinished(returnedObj);
 			stopSelf();
+		}
+
+		@Override
+		public void errorHandle(Integer resultCode) {
+			super.errorHandle(resultCode);
+			if(uploadInterface.exist()){
+				uploadInterface.onError();
+			}
 		}
 	}
 
