@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import hu.velorum.ConCopy.R;
 import hu.velorum.ConCopy.backend.UploadService;
+import hu.velorum.ConCopy.backend.statics.StaticData;
 import hu.velorum.ConCopy.utils.AppUtils;
 
 /**
@@ -59,7 +60,10 @@ public class UploadActivity extends ActionBarActivity implements View.OnClickLis
 
 			uploadBtn.setVisibility(View.INVISIBLE);
 
+			uploadTxt.setVisibility(View.VISIBLE);
 			uploadTxt.setText(R.string.collecting_contacts);
+
+			uploadProgress.setVisibility(View.VISIBLE);
 
 			uploadService.startUpload();
 		}
@@ -157,13 +161,21 @@ public class UploadActivity extends ActionBarActivity implements View.OnClickLis
 	}
 
 	@Override
-	public void onError() {
+	public void onError(int code) {
 		if (context != null){
-			AppUtils.showNoNetworkDialog(this);
-
 			uploadProgress.setVisibility(View.GONE);
 
-			uploadTxt.setText(R.string.network_unreachable);
+			switch (code) {
+				case StaticData.VALUE_DOESNT_EXIST:
+					uploadTxt.setText(getString(R.string.no_contacts_found));
+					break;
+				case StaticData.NO_NETWORK:
+					AppUtils.showNoNetworkDialog(this);
+
+					uploadTxt.setText(R.string.network_unreachable);
+					break;
+			}
+
 		}
 
 	}

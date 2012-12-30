@@ -66,11 +66,13 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 
 	@Override
 	protected int doAdditionToCursor(Cursor cursor) {
+		if (result == StaticData.VALUE_DOESNT_EXIST) {
+			return result;
+		}
 		int totalCnt = cursor.getCount();
 		int num = 0;
 
-		while (cursor.moveToNext()) {
-
+		do {
 			int progress = num++;
 
 			String id = DBDataManager.getString(cursor, BaseColumns._ID);
@@ -119,11 +121,11 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 
 			if (dataCursor != null && dataCursor.moveToFirst()) {
 				dataCursor.moveToNext(); // first position return empty data
-					String firstName = DBDataManager.getString(dataCursor, StructuredName.GIVEN_NAME);
-					contactItem.setFirstName(firstName);
+				String firstName = DBDataManager.getString(dataCursor, StructuredName.GIVEN_NAME);
+				contactItem.setFirstName(firstName);
 
-					String lastName = DBDataManager.getString(dataCursor, StructuredName.FAMILY_NAME);
-					contactItem.setLastName(lastName);
+				String lastName = DBDataManager.getString(dataCursor, StructuredName.FAMILY_NAME);
+				contactItem.setLastName(lastName);
 				dataCursor.close();
 			}
 
@@ -137,7 +139,11 @@ public class GetDetailsFromContactsTask extends QueryForCursorTask {
 			contacts.add(contactItem);
 
 			((UploadFace) taskFace).onProgressUpdated(progress, totalCnt);
-		}
+
+		} while (cursor.moveToNext());
+
+
+
 		if (contacts.size() > 0) {
 			result = StaticData.RESULT_OK;
 		} else {

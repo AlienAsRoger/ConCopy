@@ -93,6 +93,11 @@ public class UploadService extends Service {
 		}
 
 		@Override
+		public void errorHandle(Integer resultCode) {
+			uploadInterface.onError(resultCode);
+		}
+
+		@Override
 		public void onProgressUpdated(int current, int total) {
 			if (uploadInterface.exist()) {
 				uploadInterface.onProgressUpdated(current, total);
@@ -118,7 +123,7 @@ public class UploadService extends Service {
 		}
 
 		@Override
-		public void onError() {
+		public void onError(int code) {
 		}
 	}
 
@@ -143,7 +148,7 @@ public class UploadService extends Service {
 		public void errorHandle(Integer resultCode) {
 			super.errorHandle(resultCode);
 			if(uploadInterface.exist()){
-				uploadInterface.onError();
+				uploadInterface.onError(resultCode);
 			}
 		}
 	}

@@ -11,11 +11,12 @@
 	<string name="upload_contacts_to_server">Upload contacts to server</string>
 	<string name="contacts_parsed">Contacts parsed %d</string>
 	<string name="upload_finished">Contacts uploaded sucessfully! </string>
-	<string name="your_id">Your id = %s</string>
+	<string name="your_id">Access code = %s</string>
 	<string name="loading_to_server">Loading to server</string>
-	<string name="collecting_contacts">Collecting Contacts</string>
+	<string name="collecting_contacts">Collecting Contacts…</string>
 	<string name="wireless_settings">Wireless settings</string>
 	<string name="no_network">No network</string>
 	<string name="warning">Warning</string>
 	<string name="network_unreachable">Network unreachable</string>
+    <string name="no_contacts_found">No contacts was found</string>
 </resources>

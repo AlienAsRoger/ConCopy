@@ -15,5 +15,5 @@ public interface UploadFace {
 
 	void onUploading();
 
-	void onError();
+	void onError(int code);
 }
